@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>처음 만난 리덕스 - 신호등</title>
+    <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+  </head>
+  <body>
+    <div style="display: flex; gap: 16px">
+      <div
+        id="red-light"
+        style="
+          width: 56px;
+          height: 56px;
+          border-radius: 100%;
+          margin-left: 15px;
+        "
+      ></div>
+      <div
+        id="orange-light"
+        style="
+          width: 56px;
+          height: 56px;
+          border-radius: 100%;
+          margin-left: 20px;
+        "
+      ></div>
+      <div
+        id="green-light"
+        style="
+          width: 56px;
+          height: 56px;
+          border-radius: 100%;
+          margin-left: 20px;
+        "
+      ></div>
+    </div>
+    <div style="margin-top: 16px">
+      <button id="turn-on-red-button">빨간불 켜기</button>
+      <button id="turn-on-orange-button">주황불 켜기</button>
+      <button id="turn-on-green-button">초록불 켜기</button>
+    </div>
+
+    <script>
+      const $redLight = document.querySelector("#red-light");
+      const $orangeLight = document.querySelector("#orange-light");
+      const $greenLight = document.querySelector("#green-light");
+      const $redBtn = document.querySelector("#turn-on-red-button");
+      const $orangeBtn = document.querySelector("#turn-on-orange-button");
+      const $greenBtn = document.querySelector("#turn-on-green-button");
+
+      const TURN_ON_RED = "TURN_ON_RED";
+      const TURN_ON_ORANGE = "TURN_ON_ORANGE";
+      const TURN_ON_GREEN = "TURN_ON_GREEN";
+
+      function turnOnRedActionCreator() {
+        return {
+          type: TURN_ON_RED,
+        };
+      }
+      function turnOnOrangeActionCreator() {
+        return {
+          type: TURN_ON_ORANGE,
+        };
+      }
+      function turnOnGreenActionCreator() {
+        return {
+          type: TURN_ON_GREEN,
+        };
+      }
+
+      const initialState = {
+        red: false,
+        orange: false,
+        green: false,
+      };
+
+      const rootReducer = (state = initialState, action) => {
+        switch (action.type) {
+          case TURN_ON_RED:
+            return {
+              ...state,
+              red: true,
+            };
+          case TURN_ON_ORANGE:
+            return {
+              ...state,
+              orange: true,
+            };
+          case TURN_ON_GREEN:
+            return {
+              ...state,
+              green: true,
+            };
+          default:
+            return state;
+        }
+      };
+
+      const store = Redux.createStore(rootReducer);
+
+      function render() {
+        if (store.getState().red) {
+          $redLight.style.backgroundColor = "red";
+        } else {
+          $redLight.style.backgroundColor = "gray";
+        }
+        if (store.getState().orange) {
+          $orangeLight.style.backgroundColor = "orange";
+        } else {
+          $orangeLight.style.backgroundColor = "gray";
+        }
+        if (store.getState().green) {
+          $greenLight.style.backgroundColor = "green";
+        } else {
+          $greenLight.style.backgroundColor = "gray";
+        }
+      }
+
+      // Initial rendering
+      render();
+
+      // UI update subscribe Redux Store
+      store.subscribe(render);
+
+      $redBtn.addEventListener("click", () => {
+        store.dispatch(turnOnRedActionCreator());
+      });
+
+      $orangeBtn.addEventListener("click", () => {
+        store.dispatch(turnOnOrangeActionCreator());
+      });
+
+      $greenBtn.addEventListener("click", () => {
+        store.dispatch(turnOnGreenActionCreator());
+      });
+    </script>
+  </body>
+</html>

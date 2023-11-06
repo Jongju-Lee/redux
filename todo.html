@@ -94,14 +94,22 @@
       );
 
       function render() {
-        // 이전 TODO 목록 초기화
+        // 이전 TODO, MEMO 목록 초기화
         $todoList.innerHTML = "";
+        $memoList.innerHTML = "";
+
         // TODO 목록 rendering
-        store.getState().forEach((todo) => {
+        store.getState().todo.forEach((todo) => {
           // store.getState() = 현재 스테이트를 말함
           const $li = document.createElement("li");
           $li.textContent = todo;
           $todoList.append($li);
+        });
+
+        store.getState().memo.forEach((memo) => {
+          const $memoLi = document.createElement("li");
+          $memoLi.textContent = memo;
+          $memoList.append($memoLi);
         });
       }
 
@@ -127,6 +135,19 @@
         };
       }
 
+      function addMemoActionCreator(text) {
+        return {
+          type: ADD_MEMO,
+          text: text,
+        };
+      }
+
+      function removeMemoActionCreator() {
+        return {
+          type: REMOVE_MEMO,
+        };
+      }
+
       $addBtn.addEventListener("click", () => {
         // Action dispatch
         store.dispatch(addTodoActionCreator($todoInput.value));
@@ -147,6 +168,15 @@
 
       $stateButton.addEventListener("click", () => {
         console.log("현재 state : ", store.getState());
+      });
+
+      $addMemoBtn.addEventListener("click", () => {
+        store.dispatch(addMemoActionCreator($memoInput.value));
+        $memoInput.value = "";
+      });
+
+      $removeMemoBtn.addEventListener("click", () => {
+        store.dispatch(removeMemoActionCreator());
       });
     </script>
   </body>
