@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>처음 만난 리덕스 = Counter</title>
+    <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+  </head>
+  <body>
+    <p>Counter: <span id="value">0</span></p>
+    <div>
+      <button id="increment">+</button>
+      <button id="decrement">-</button>
+      <script>
+        function counter(state, action) {
+          if (typeof state === "undefined") {
+            return 0;
+          }
+
+          switch (action.type) {
+            case "INCREMENT":
+              return state + 1;
+            case "DECREMENT":
+              return state - 1;
+            default:
+              return state;
+          }
+        }
+        const Store = Redux.createStore(counter);
+        const valueElem = document.getElementById("value");
+
+        function render() {
+          valueElem.innerHTML = Store.getState().toString();
+        }
+
+        render();
+        Store.subscribe(render); // subscribe 안에 함수 넣으면 redux store의 state가 바뀔때마다 해당 함수가 호출된다.
+
+        document
+          .getElementById("increment")
+          .addEventListener("click", function () {
+            Store.dispatch({ type: "INCREMENT" });
+          });
+        document
+          .getElementById("decrement")
+          .addEventListener("click", function () {
+            Store.dispatch({ type: "DECREMENT" });
+          });
+      </script>
+    </div>
+  </body>
+</html>
